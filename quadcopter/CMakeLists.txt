@@ -35,7 +35,7 @@ pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(quadcopter quadcopter.c ping_sensor.c)
+add_executable(quadcopter quadcopter.c ping_sensor.c PID.c motor_driver.c)
 
 pico_set_program_name(quadcopter "quadcopter")
 pico_set_program_version(quadcopter "0.1")
