@@ -35,7 +35,7 @@ pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(quadcopter quadcopter.c ping_sensor.c PID.c motor_driver.c)
+add_executable(quadcopter quadcopter.c ping_sensor.c PID.c motor_driver.c IMU.c)
 
 pico_set_program_name(quadcopter "quadcopter")
 pico_set_program_version(quadcopter "0.1")
@@ -48,6 +48,7 @@ pico_enable_stdio_usb(quadcopter 1)
 target_link_libraries(quadcopter
         pico_stdlib
         hardware_pwm
+        hardware_i2c
         )
 
 # Add the standard include files to the build

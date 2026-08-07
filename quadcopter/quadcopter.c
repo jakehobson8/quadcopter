@@ -4,13 +4,16 @@
 #include "ping_sensor.h"
 #include "motor_driver.h"
 #include "PID.h"
+#include "IMU.h"
 
 
 //#define PING_TEST
 //#define MOTOR_TEST
 //#define IMU_TEST
 
-// Main funciton
+/****************************************************************************************
+ * Main function                                                                        *
+ ****************************************************************************************/ 
 #if !defined(PING_TEST) && !defined(IMU_TEST) && !defined(MOTOR_TEST)
 
 int main()
@@ -23,6 +26,8 @@ int main()
     PIDController Motor1PID;
     PID_Init(&Motor1PID, 1.0f, 0.5f, 0.1f, 0.001f); // Initialize PID controller with example gains
 
+    sleep_ms(1000); // Wait for 1 second before starting the flight control loop
+
     while (true) {
         // flight control loop
         int distance = ping_sensor_read();
@@ -30,6 +35,7 @@ int main()
         // Example desired distance (setpoint) for the PID controller
         float desired_distance = 20.0f; // Desired distance in cm
         int motor_pwm = PID_CalculatePWM(&Motor1PID, desired_distance, (float)distance);
+        
         if (motor_pwm < 0) {
             motor_pwm = 0; // Ensure PWM is not negative
         }
@@ -44,6 +50,10 @@ int main()
 #endif // Main
 
 
+
+/*****************************************************************************************
+ * Test Harnesses                                                                        *
+ *****************************************************************************************/
 #ifdef MOTOR_TEST
 int main()
 {
@@ -74,3 +84,18 @@ int main()
     }
 }
 #endif // PING_TEST
+
+
+#ifdef IMU_TEST
+int main()
+{
+    stdio_init_all();
+    IMU_init();
+
+    while (true) {
+        IMUData orientation = IMU_read_orientation();
+        printf("Roll: %.2f, Pitch: %.2f, Yaw: %.2f\n", orientation.roll, orientation.pitch, orientation.yaw);
+        sleep_ms(100); // Wait for 100 ms before the next reading
+    }
+}
+#endif // IMU_TEST
